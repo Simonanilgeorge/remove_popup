@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Remove Popup",
+  "name": "Geeks for Geeks Pop-Up Blocker",
   "version": "1.0",
-  "description": "Remove the popup that asks you to Sign up on https://www.geeksforgeeks.org/",
+  "description": "This extension removes the sign-in popup that appears on Geeks for Geeks, allowing you to access the site's content without being prompted to log in. With this extension, you can browse Geeks for Geeks freely and efficiently.",
   "icons": {
     "16": "images/icon-16.png",
     "32": "images/icon-32.png",
@@ -17,16 +17,10 @@
       "128": "images/icon-128.png"
     }
   },
-  "background": {
-    "service_worker": "background.js"
-  },
   "content_scripts": [
     {
       "js": [
         "content.js"
-      ],
-      "css": [
-        "style.css"
       ],
       "matches": [
         "https://www.geeksforgeeks.org/*"
