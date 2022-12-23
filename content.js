@@ -18,12 +18,40 @@ async function main() {
   spinner.remove()
   element.remove()
 
-  // grab the article element
-  let article = await waitForElement(".article--viewer")
+  // grab the body element
+  let body = await waitForElement("body")
+  // check if blocking styles have loaded for body
+  let status = await waitForElementStyle(body)
 
-  // add style to article element to enable scrolling
-  article.style.height = "100vh"
-  article.style.overflow = "auto"
+  if (status) {
+    // add style to  body to enable scrolling
+    body.style.height = "100vh"
+    body.style.overflow = "auto"
+    body.style.position = "static"
+  }
+
+
+}
+
+// function to check if blocking styles have been added to body
+async function waitForElementStyle(body) {
+
+  let interval = null
+  // create a new promise;promise gets resolved when blocking styles are added to the body
+  return new Promise((resolve, reject) => {
+    // function to check if styles have been added
+    const checkStyle = () => {
+      // get computed styles
+      let computedStyle = window.getComputedStyle(body)
+      // check if styles have been added
+      if (computedStyle.overflow == "hidden" && computedStyle.position == "fixed") {
+        clearInterval(interval)
+        resolve(true)
+      }
+    }
+    // call checkElement() every 1 second until blocking styles have been added
+    interval = setInterval(checkStyle, 1000)
+  })
 
 }
 
@@ -36,7 +64,6 @@ async function waitForElement(selector) {
       let element = document.querySelectorAll(selector);
 
       // if element is found clear interval and resolve the promise
-      
       if (element.length > 0) {
         clearInterval(interval);
         resolve(element[0]);
