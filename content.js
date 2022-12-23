@@ -1,39 +1,43 @@
-// set the initial message as false
-let messageSent = false;
-chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
-
-  // if page is loaded and message is received;this is used to prevent the calling of the main function more than once
-  if (!messageSent) {
-    // set the messageSent value as true to prevent multiple calls to main function
-    messageSent = true;
-    main();
-  }
-
-});
 
 
-// function to check if element exists in the page
-async function waitForElement(selector) {
+main()
 
-  // create a new promise;promise is resolved when element is found
-  return new Promise((resolve, reject) => {
-    const checkExists = () => {
-      const element = document.querySelectorAll(selector)[0];
-      if (element) {
-        resolve(element);
-      } else {
-        // repeatedly call the checkExists function to check if element is found;promise is resolved if element is found
-        requestAnimationFrame(checkExists);
-      }
-    };
+async function main(){
+  
+  let element = await waitForElement(".login-modal-div")
+  let spinner=await waitForElement(".spinner-loading-overlay")
+  
+  spinner.remove()
+  element.remove()
 
-    // call the function the first time
-    checkExists();
-  });
+  let article=await waitForElement(".article--viewer")
+  
+  article.style.height="100vh"
+  article.style.overflow="auto"
 }
 
-// main function
-async function main() {
 
-  console.log("testing")
+
+async function wait(amount){
+  return new Promise((resolve,reject)=>{
+
+    setTimeout(()=>{
+      resolve()
+    },amount)
+  })
+}
+
+async function waitForElement(selector){
+  return new Promise((resolve, reject) => {
+    const checkElement = () => {
+      let element = document.querySelectorAll(selector);
+      if (element.length > 0) {
+        clearInterval(interval);
+        resolve(element[0]);
+      }
+    }
+
+    // Call checkElement() every 1 second until the element is found
+    let interval = setInterval(checkElement, 100);
+  });
 }
