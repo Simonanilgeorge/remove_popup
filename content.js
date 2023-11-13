@@ -70,7 +70,7 @@ async function waitForElement(selector) {
       }
     }
 
-    // Call checkElement() every 1 second until the element is found
+    // Call checkElement() every 100 ms until the element is found
     let interval = setInterval(checkElement, 100);
   });
 }
